@@ -1,0 +1,33 @@
+﻿@model e_Project.Models.User
+@{
+    ViewData["Title"] = "Registration";
+}
+
+<div class="text-center">
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            @Html.LabelFor(e => e.Email)
+            @Html.TextBoxFor(e => e.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(e => e.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Password)
+            @Html.PasswordFor(p => p.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.Password, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(n => n.Name)
+            @Html.TextBoxFor(n => n.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(n => n.Name, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(ph => ph.Phone)
+            @Html.TextBoxFor(ph => ph.Phone, new { @class = "form-control" })
+            @Html.ValidationMessageFor(ph => ph.Phone, "", new { @class = "text-danger" })
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Register</button>
+    }
+</div>
