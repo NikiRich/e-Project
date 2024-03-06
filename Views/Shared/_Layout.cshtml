@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,13 +11,28 @@
 </head>
 <body>
     <header>
-        <ul class="nav justify-content-center bg-primary ">
+        <ul class="nav justify-content-center bg-primary">
             <li class="nav-item">
                 <a class="nav-link text-black" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-black" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-            </li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="nav-item">
+                    <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display: none;">
+                        @Html.AntiForgeryToken()
+                    </form>
+                    <a class="nav-link text-black" href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">Logout</a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-black" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-black" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                </li>
+            }
         </ul>
     </header>
     <div class="container">
