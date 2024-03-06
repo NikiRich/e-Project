@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Logout";
+}
+
+<div class="text-center">
+    <h1>Logout</h1>
+    <p>Are you sure you want to log out?</p>
+    <form asp-action="Logout" asp-controller="Account" method="post">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-primary">Logout</button>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
