@@ -1,6 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
+
+
 <div class="container text-center">
     <h1>Welcome to e-Project</h1>
 </div>
+@if (User.Identity.IsAuthenticated)
+{
+    <div>
+        <a class="btn btn-primary btn-lg" href="@Url.Action("AddProject","Project")" role="button">Add Project</a>
+    </div>
+}
+
+
