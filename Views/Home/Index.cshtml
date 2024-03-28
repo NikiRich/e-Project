@@ -12,6 +12,27 @@
     <div>
         <a class="btn btn-primary btn-lg" href="@Url.Action("AddProject","Project")" role="button">Add Project</a>
     </div>
+    @model IEnumerable<e_Project.Models.Project>
+    <h2>Completed Projects:</h2>
+    @if (Model.Any())
+    {
+        <ul class="list-unstyled">
+            @foreach (var project in Model)
+            {
+                <li>
+                    <strong>@project.Title</strong> by @project.Author
+                    <br />
+                    <em>Description:</em> @project.Description
+                    <br />
+                    <em>Programming Language:</em> @project.ProgrammingLanguage
+                    <br />
+                    <em>Completion Time:</em> @project.CompletionTime
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No completed projects found.</p>
+    }
 }
-
-
