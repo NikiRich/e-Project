@@ -24,6 +24,9 @@ namespace e_Project.Models
         [Required(ErrorMessage = "Description is required.")]
         [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters.")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Completion Time is required.")]
+        public int CompletionTime { get; set; }
     }
 
     public enum ProjectStatus
