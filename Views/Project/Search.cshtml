@@ -1,0 +1,56 @@
+﻿@model IEnumerable<e_Project.Models.Project>
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h2>Search Projects</h2>
+
+<form method="post" asp-action="Search">
+    <input type="text" name="query" class="form-control mb-2 mr-sm-2" placeholder="Search projects" value="@ViewBag.Query" required/>
+    <button type="submit" class="btn btn-primary mb-2">Search</button>
+</form>
+@{
+    var projects = Model ?? Enumerable.Empty<e_Project.Models.Project>();
+}
+@if (projects.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Author</th>
+                <th scope="col">Programming Language</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in Model)
+            {
+                <tr>
+                    <td>@project.Title</td>
+                    <td>@project.Description</td>
+                    <td>@project.Author</td>
+                    <td>@project.ProgrammingLanguage</td>
+                    <td>@project.Status</td>
+                    @if (User.Identity.IsAuthenticated && (project.Status == ProjectStatus.Pending || project.Status == ProjectStatus.Completed))
+                    {
+                        <td>
+                            <form method="post" asp-action="Delete" asp-route-id="@project.ProjectId" onsubmit="return confirm('Are you sure you want to delete project @project.Title?');">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if(!string.IsNullOrEmpty(ViewBag.Query))
+{
+    <p>No projects found for "@ViewBag.Query".</p>
+}
+else
+{
+    <p>Enter a search term to find projects.</p>
+}
