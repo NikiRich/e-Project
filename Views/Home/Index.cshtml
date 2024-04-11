@@ -9,6 +9,12 @@
 </div>
 @if (User.Identity.IsAuthenticated)
 {
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            @ViewBag.SuccessMessage
+        </div>
+    }
     <div>
         <a class="btn btn-primary btn-lg" href="@Url.Action("AddProject","Project")" role="button">Add Project</a>
     </div>
