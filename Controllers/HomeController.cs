@@ -12,6 +12,7 @@ namespace e_Project.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
             var recentProjects = _context.Projects
                  .Where(p => p.Status == ProjectStatus.Completed)
                  .OrderByDescending(p => p.CompletionTime)
