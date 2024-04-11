@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "Title": { "type": "string" },
+      "Description": { "type": "string" },
+      "Author": { "type": "string" },
+      "ProgrammingLanguage": { "type": "string" },
+      "Status": {
+        "type": "string",
+        "enum": [ "Pending", "InProgress", "Completed" ]
+      },
+      "CompletionTime": { "type": "integer" }
+    },
+    "required": [ "Title", "Description", "Author", "ProgrammingLanguage", "Status", "CompletionTime" ]
+  }
+}
