@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using e_Project.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace e_Project.Controllers
 {
@@ -77,6 +78,114 @@ namespace e_Project.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Project project)
+        {
+            if (id != project.ProjectId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(project);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Project updated successfully!";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProjectExists(project.ProjectId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index), "Home");
+            }
+            return View(project);
+        }
+
+        private bool ProjectExists(int id)
+        {
+            return _context.Projects.Any(e => e.ProjectId == id);
+        }
+
+        [HttpGet]
+        public IActionResult Import()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(IFormFile jsonFile)
+        {
+            if (jsonFile == null || jsonFile.Length == 0)
+            {
+                TempData["Message"] = "Please select a JSON file to upload.";
+                TempData["MessageType"] = "Error";
+                return View();
+            }
+
+            try
+            {
+                using (var stream = jsonFile.OpenReadStream())
+                {
+                    var projects = await JsonSerializer.DeserializeAsync<List<Project>>(stream, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (projects != null)
+                    {
+                        foreach (var project in projects)
+                        {
+                            _context.Projects.Add(project);
+                        }
+                        await _context.SaveChangesAsync();
+
+                        TempData["SuccessMessage"] = $"{projects.Count} projects have been successfully imported.";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "The file could not be deserialized into the project list.";
+                    }
+                }
+            }
+            catch (JsonException jsonEx)
+            {
+                TempData["ErrorMessage"] = "There was an error processing your JSON file: " + jsonEx.Message;
+                return RedirectToAction(nameof(Import));
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "An unexpected error occurred: " + ex.Message;
+                TempData["MessageType"] = "Error";
+            }
+
+            return View();
+        }
+
+
+
     }
     public static class Extension
     {
